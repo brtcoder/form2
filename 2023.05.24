@@ -1,1 +1,80 @@
 
+<p>Contact form</p>
+<?php //persisting data in the fields 
+$oldform1 = isset($_POST['firstname']) ? $_POST['firstname']:'';
+$oldform2 = isset($_POST['lastname']) ? $_POST['lastname']:'';
+$oldform3 = isset($_POST['email']) ? $_POST['email']:'';
+$oldform4 = isset($_POST['telephonenumber']) ? $_POST['telephonenumber']:'';
+//$oldform5 = isset($_POST['subject']) ? $_POST['subject']:'';
+$oldform6 = isset($_POST['message']) ? $_POST['message']:'';
+?>
+
+<form method="post" action=""> <!--action="process_form.php"> -->
+	<p><!--01 - firstname (text field type) -->
+		<label for="inp01">First name:</label>
+		<input type="text" name="firstname" id="inp01" size="40" value="<?=htmlentities($oldform1) ?>"></p> <!--required-->
+	<p><!--02 - lastname (text field type) -->
+		<label for="inp02">Last name:</label>
+		<input type="text" name="lastname" id="inp02" size="40" value="<?=htmlentities($oldform2) ?>"></p> <!--required-->
+	<p><!--03 - email (email field type) -->
+		<label for="inp03">Email address:</label>
+		<input type="text" name="email" id="inp03" size="40" value="<?=htmlentities($oldform3) ?>"></p> <!--required--> <!--email-->
+	<p><!--04 - Telephone number (text field type) -->
+		<label for="inp04">Telephone number:</label>  
+		<input type="text" name="telephonenumber" id="inp04" placeholder="07777777777" pattern="[0-9]{1,11}" size="40" value="<?=htmlentities($oldform4) ?>"></p> 
+		<!--required-->
+	<p><!--05 - Subject (select/dropdown field type) -->
+		<label for="inp05">Choose a subject:</label>
+		<select id="inp05" name="subject">
+		<!--value="<?=$oldform5 ?>" -->
+		<option value="enquiry" <?=((isset($_POST['subject']) && $_POST['subject'] == 'enquiry') ? 'selected' : '')?> >Enquiry</option>
+		<option value="callback" <?=((isset($_POST['subject']) && $_POST['subject'] == 'callback') ? 'selected' : '') ?> >Call Back</option>
+		<option value="complaint" <?=((isset($_POST['subject']) && $_POST['subject'] == 'complaint') ? 'selected' : '') ?> >Complaint</option>
+		</select></p>
+	<p><!--06 - Message (textarea field type) -->
+		<!-- above fields have their value sent, textarea has its text sent under its key (its name) 'message'-->
+		<label for="inp06">Message:</label></p> 
+		<p>
+			<textarea name="message" id="inp06" rows="10" cols="40"><?=htmlentities($oldform6) ?></textarea> <!--required-->
+		</p>
+	<br><br>
+	<input type="submit" name="submitted" value="Submit"/> <!-- is set submitted-->
+</form>
+
+<pre>
+$_POST:
+<?php
+print_r($_POST); 
+?>
+</pre>
+
+
+
+<?php //testing on non-validated input? is this ok? just checking len in first two, and using built in email validator filter
+if (! isset($_POST['firstname'])) {
+	echo("Missing first name");
+	} elseif (strlen($_POST['firstname'])<2){
+		echo("Your first name is too short");
+	}
+echo "<br>";
+if (! isset($_POST['lastname'])) {
+		echo("Missing last name");
+	} elseif (strlen($_POST['lastname'])<2) {
+		echo("Your last name is too short");
+	}
+echo "<br>";
+if (! isset($_POST['email'])) {
+		echo("Missing email");
+	} elseif (filter_var(($_POST['email']),FILTER_VALIDATE_EMAIL)==FALSE) {
+		echo("Please provide correct email address");
+	}	
+echo "<br>";
+?>
+
+<!-- 4 Server Side validation (in PHP)
+Non-empty string		->	strlen($var)>0
+email address			->	strpos($var,'@')>0
+numeric field (boolean)	->	is_numeric($var)
+filter_var($var,FILTER_VALIDATE_EMAIL)!==false
+-->
+
